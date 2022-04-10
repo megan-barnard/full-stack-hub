@@ -1,42 +1,83 @@
 import styled from "styled-components";
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { FaHome, FaUserAlt, FaBell, FaSearch } from "react-icons/fa";
+
 
 // import { CurrentUserContext } from "./CurrentUserContext";
 
 const Navbar = () => {
   // const { currentUser } = useContext(CurrentUserContext);
   // const loggedInUser = currentUser ? currentUser.handle : '';
-  const loggedInUser = 'test';
+  
+  const currentUser = 'testacc1';
+  const isLoggedIn = true;
+
+  const handleLogout = () => {
+    console.log('logout');
+
+  };
 
   return (
     <Wrapper>
-      <LinkDiv>
-        <NavbarLink exact to="/" activeClassName="active"><MenuItem> Home </MenuItem></NavbarLink>
-        <NavbarLink exact to={`/profile/${loggedInUser}`} activeClassName="active"><MenuItem> Profile </MenuItem></NavbarLink>
-        <NavbarLink exact to="/notifications" activeClassName="active"><MenuItem> Notifications </MenuItem></NavbarLink>
-        <NavbarLink exact to="/search" activeClassName="active"><MenuItem> Search </MenuItem></NavbarLink>
-        <NavbarLink exact to="/" activeClassName="active"><MenuItem> Logout </MenuItem></NavbarLink>
-        <NavbarLink exact to="/login" activeClassName="active"><MenuItem> Login </MenuItem></NavbarLink>
-      </LinkDiv>
+      <LogoLink to="/"><Logo>Logo</Logo></LogoLink>
+      <NavLinks>
+        <NavbarLink exact to="/" activeClassName="active"><MenuItem><FaHome /></MenuItem></NavbarLink>
+        <NavbarLink to={`/profile/${currentUser}`} activeClassName="active"><MenuItem><FaUserAlt /></MenuItem></NavbarLink>
+        <NavbarLink exact to="/notifications" activeClassName="active"><MenuItem><FaBell /></MenuItem></NavbarLink>
+        <NavbarLink exact to="/search" activeClassName="active"><MenuItem><FaSearch /></MenuItem></NavbarLink>
+      </NavLinks>
+      {isLoggedIn
+        ? <Logout onClick={() => handleLogout()}><MenuItem> Logout </MenuItem></Logout>
+        : <NavbarLink to="/login"><MenuItem> Login </MenuItem></NavbarLink>
+      }
     </Wrapper>
   )
 };
 
 const Wrapper = styled.div`
   display: flex;
-  height: 50px;
+  justify-content: space-between;
+  position: fixed;
+  height: var(--navbar-height);
   width: 100%;
   padding: 0 25px;
-  background-color: lightgray;
-  border-bottom: solid 1px grey;
+  background-color: var(--color-dark-grey);
 `;
 
-const LinkDiv = styled.div`
+const LogoLink = styled(NavLink)`
   display: flex;
+  align-items: center;
+  text-decoration: none;
 
-  .active {
-    color: red;
+  &:hover > * {
+    color: var(--primary-button-active);
+  }
+`;
+
+const Logo = styled.h1`
+font-family: var(--font-logo);
+  color: var( --logo-color);
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+`;
+
+const NavbarLink = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+  text-decoration: none;
+
+  &:hover > * {
+    background-color: var(--primary-button-active);
+  }
+  &:active > * {
+    transform: translateY(1px);
+  }
+  &.active div {
+    background-color: var(--primary-button-active);
   }
 `;
 
@@ -46,23 +87,24 @@ const MenuItem = styled.div`
   padding: 10px 15px;
   border-radius: 20px;
   font-weight: bold;
-  background-color: white;
-  color: black;
+  background-color: var(--primary-button-background);
+  color: var(--primary-button-color);
 `;
 
-const NavbarLink = styled(NavLink)`
+const Logout = styled.button`
   display: flex;
   align-items: center;
-  margin: 10px;
-  text-decoration: none;
 
-  &:hover ${MenuItem}{
-    background-color: black;
-    color: white;
+  &:hover > * {
+    background-color: var(--primary-button-active);
   }
-  &:active ${MenuItem}{
+  &:active > * {
     transform: translateY(1px);
   }
 `;
+
+// --primary-button-color: #0d0d0d;
+// --primary-button-active: rgba(255,255,255,0.7);
+// --primary-button-background: #ffffff;
 
 export default Navbar;

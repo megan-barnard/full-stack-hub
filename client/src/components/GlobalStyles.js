@@ -2,11 +2,24 @@ import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
   :root {
-    --font-heading: sans-serif;
-    --font-body: sans-serif;
+    --color-dark-grey: #0d0d0d;
+    --color-grey: #878787;
+    --color-light-grey: #d4d4d4;
+    --color-lighter-grey: #f0f0f0;
+    --navbar-height: 56px;
+    --font-logo: 'Poppins', "Segoe UI", Helvetica, sans-serif;
+    --font-heading: "Segoe UI", Helvetica, sans-serif; 
+    --font-body: "Segoe UI", Helvetica, sans-serif;
+    --font-lg: 25px;
+    --font-md: 20px;
+    --font-sm: 15px;
+    --logo-color: #ffffff;
     --padding-lg: 28px;
     --padding-md: 16px;
     --padding-sm: 8px;
+    --primary-button-color: #0d0d0d;
+    --primary-button-active: rgba(255,255,255,0.7);
+    --primary-button-background: #ffffff;
   }
 
   html, body, div, span, applet, object, iframe,
@@ -22,56 +35,69 @@ export default createGlobalStyle`
   figure, figcaption, footer, header, hgroup,
   menu, nav, output, ruby, section, summary,
   time, mark, audio, video {
-      margin: 0;
-      padding: 0;
-      border: 0;
-      box-sizing: border-box;
-      font-size: 100%;
-      vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+    vertical-align: baseline;
   }
   /* HTML5 display-role reset for older browsers */
   article, aside, details, figcaption, figure,
   footer, header, hgroup, menu, nav, section {
-      display: block;
+    display: block;
   }
   body {
-      line-height: 1;
+    line-height: 1;
+    background-color: whitesmoke;
   }
   ol, ul {
-      list-style: none;
+    list-style: none;
   }
   blockquote, q {
-      quotes: none;
+    quotes: none;
   }
   blockquote:before, blockquote:after,
   q:before, q:after {
-      content: '';
-      content: none;
+    content: '';
+    content: none;
   }
 
   h1,
   h2,
   h3,
-  label,
-  button {
-    color: #fff;
+  label {
+    color: var(--color-dark-grey);
     font-family: var(--font-heading);
-    font-size: 32px;
     text-align: center;
   }
   p,
   a,
   li,
+  div,
+  span,
   blockquote,
   input {
     font-family: var(--font-body);
   }
 
   input {
-    font-size: 24px;
+    font-size: var(--font-md);
     height: 42px;
-    border: 2px solid var(--color-orange);
+    border: none;
     border-radius: 4px;
     padding: 0 12px;
+  }
+  /* Button styles */
+  button {
+    display: block;
+    padding: 0;
+    margin: 0;
+    border: none;
+    color: #000000;
+    background-color: transparent;
+    font-family: var(--font-heading);
+    font-size: var(--font-sm);
+    text-align: center;
+    cursor: pointer;
   }
 `;

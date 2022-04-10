@@ -1,16 +1,20 @@
 import styled from "styled-components";
-import { users, posts } from "../../assets/testData";
+import { Avatar, DisplayName, UnstyledLink } from "../Styles";
+import moment from "moment";
 
-const PostHeader = ({postId}) => {
-  const post =  posts[postId];
-  const user = users[post.authorHandle];
-  console.log(user, posts[postId]);
+const PostHeader = ({post, postAuthor}) => {
+  let postDate = moment(post.timestamp).calendar(); 
+
+  // Current time generator
+  // let currentTimestamp = moment().format();
+  // console.log('current',currentTimestamp);
+
   return (
     <Wrapper>
-      <Avatar src={user.avatarSrc} alt={user.displayName}></Avatar>
+      <UnstyledLink to={`/profile/${postAuthor.id}`}><Avatar src={postAuthor.profile.avatarSrc} alt={postAuthor.profile.displayName} loading="lazy"></Avatar></UnstyledLink>
       <Name>
-        <DisplayName>{user.displayName}</DisplayName>
-        <Handle>{user.id}</Handle>
+        <UnstyledLink to={`/profile/${postAuthor.id}`}><DisplayName>{postAuthor.profile.displayName}</DisplayName></UnstyledLink>
+        <Handle><UnstyledLink to={`/profile/${postAuthor.id}`}>@{postAuthor.id}</UnstyledLink><span> · {postDate}</span></Handle>
       </Name>
     </Wrapper>
   )
@@ -20,26 +24,17 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
 `;
-const Avatar = styled.img`
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-right: 10px;
-  border: 2px solid white;
-`;
 
 const Name = styled.div`
   
 `;
 
-const Handle = styled.div`
-
+const Handle = styled.span`
+  color: var(--color-grey);
+  & a {
+    color: var(--color-grey);
+  }
 `;
 
-const DisplayName = styled.div`
-  font-weight: bold;
-  font-size: 120%;
-`;
 
 export default PostHeader;

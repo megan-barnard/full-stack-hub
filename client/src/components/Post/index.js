@@ -1,25 +1,36 @@
 import styled from "styled-components";
+import { Container } from "../Styles";
 
 import PostHeader from "./PostHeader";
 import PostContent from "./PostContent";
-import ActionBar from "./ActionBar/index";
+import ActionBar from "./ActionBar";
+import PostComments from "./PostComments";
 
-const Post = ({postId}) => {
+import { users } from "../../assets/testData";
+
+const Post = ({post}) => {
+  const postAuthor = users[post.authorId];
+
   return (
     <Wrapper>
-      <PostHeader postId={postId} />
-      <PostContent postId={postId} />
-      <ActionBar postId={postId} />
+      <PostDiv>
+        <PostHeader post={post} postAuthor={postAuthor} />
+        <PostContent post={post} />
+        <ActionBar post={post} />
+      </PostDiv>
+      <PostComments post={post} />
     </Wrapper>
   )
 };
 
-const Wrapper = styled.div`
-  margin: 30px;
-  border: 1px solid black;
-  width: 100%;
-  padding: 25px;
+const Wrapper = styled(Container)`
+  margin-top: 30px;
+`;
 
+const PostDiv = styled.div`
+  padding: 25px;
+  border-bottom: 1px solid var(--color-lighter-grey);
+  width: 100%;
 `;
 
 export default Post;

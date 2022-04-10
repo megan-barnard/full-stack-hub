@@ -4,7 +4,7 @@ import GlobalStyles from "./GlobalStyles";
 
 // Import Components
 import Navbar from "./Navbar";
-import HomeFeed from "./Feed/HomeFeed";
+import HomePage from "./HomePage";
 import Notifications from "./Notifications";
 import Profile from "./Profile";
 import PostDetails from "./Post/PostDetails";
@@ -13,11 +13,13 @@ import Login from "./AccountActions/Login";
 import Signup from "./AccountActions/Signup";
 import EditPassword from "./AccountActions/EditPassword";
 import ForgotPassword from "./AccountActions/ForgotPassword";
-import Spinner from "./Spinner";
+import ErrorMessage from "./ErrorMessage";
 import Footer from "./Footer";
 
 
 const App = () => {
+  const currentUser = 'testacc1';
+
   return (
     <BrowserRouter>
       <GlobalStyles />
@@ -25,18 +27,18 @@ const App = () => {
       <Main>
         <Switch>
           <Route exact path="/">
-            <HomeFeed />
+            <HomePage />
           </Route>
           <Route exact path="/notifications">
             <Notifications />
           </Route>
-          <Route exact path="/profile/:id">
+          <Route exact path="/profile/:userId">
             <Profile />
           </Route>
-          <Route exact path="/profile/:id/edit">
+          <Route exact path="/profile/:userId/edit">
             <Profile />
           </Route>
-          <Route exact path="/post/:id">
+          <Route exact path="/post/:postId">
             <PostDetails />
           </Route>
           <Route exact path="/search">
@@ -54,6 +56,9 @@ const App = () => {
           <Route exact path="/edit-password">
             <EditPassword />
           </Route>
+          <Route> 
+            <ErrorMessage message={"Page not found."} />
+          </Route>
         </Switch>
       </Main>
       <Footer />
@@ -63,7 +68,21 @@ const App = () => {
 
 const Main = styled.div`
   margin: 0 auto;
-  width: 80%;
+  padding-top: var(--navbar-height);
+  max-width: 1000px;
+  min-width: 300px;
+  min-height: calc(100vh - var(--navbar-height));
+  box-sizing: border-box;
+  
+  @media screen and (min-width: 950px) {
+    width: 900px;
+  }
+  @media screen and (max-width: 949px) { 
+    width: 550px;
+  }
+  @media screen and (max-width: 575px) {
+    width: 100%;
+  }
 `;
 
 export default App;
