@@ -7,6 +7,7 @@ export default createGlobalStyle`
     --color-light-grey: #d4d4d4;
     --color-lighter-grey: #f0f0f0;
     --navbar-height: 56px;
+    --footer-height: 150px;
     --font-logo: 'Poppins', "Segoe UI", Helvetica, sans-serif;
     --font-heading: "Segoe UI", Helvetica, sans-serif; 
     --font-body: "Segoe UI", Helvetica, sans-serif;
@@ -76,7 +77,8 @@ export default createGlobalStyle`
   div,
   span,
   blockquote,
-  input {
+  input,
+  textarea {
     font-family: var(--font-body);
   }
 

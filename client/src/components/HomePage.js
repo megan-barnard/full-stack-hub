@@ -17,17 +17,12 @@ const HomePage = () => {
 
   return (
     <Wrapper>
-      <CreatePost>Create Post</CreatePost>
       <PostFeed posts={postsArr} />
     </Wrapper>
   )
 };
 
 const Wrapper = styled.div`
-  
-`;
-
-const CreatePost = styled(Container)`
   
 `;
 

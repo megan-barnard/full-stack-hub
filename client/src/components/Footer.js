@@ -18,12 +18,11 @@ const Footer = () => {
 };
 
 const Wrapper = styled.div`
-  margin-top: 15px;
   position: relative;
   bottom: 0;
-  left: 0;
+  left: 0; 
   width: 100%;
-  height: 150px;
+  height: var(--footer-height);
   color: white;
   background-color: var(--color-dark-grey);
   overflow: hidden;

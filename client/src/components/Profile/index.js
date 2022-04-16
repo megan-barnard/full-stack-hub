@@ -12,7 +12,6 @@ import { users, posts } from "../../assets/testData"; // Remove
 
 const Profile = () => {
   const { userId } = useParams();
-  const currentUser = 'testacc1';
   const [user, setUser] = useState(users[userId]);
   const [userPosts, setUserPosts] = useState([]);
   
