@@ -5,7 +5,7 @@ const { db, arrayUnion, timestamp, documentId } = require("../util/firebase");
 // Get all users. /api/get-users?lastVisibleId=LASTUSERID
 const getUsers = async (req, res) => {
   const { lastVisibleId } = req.query;
-  const limit = 2;
+  const limit = 25;
   try {
     const lastUserRef = lastVisibleId ? await db.collection('users').doc(lastVisibleId).get() : '';
     const query =  lastUserRef ? 
@@ -35,10 +35,30 @@ const getUserById = async (req, res) => {
 };
 
 const registerNewUser = async (req, res) => {
-  const { name, email, uid } = req.body;
+  const { name, username, email, uid, additionalData } = req.body;
   try {
     const joined = timestamp();
-    await db.collection("users").doc(uid).set({ email, active: true, "profile": { joined, displayName: name, avatarSrc:"", bannerSrc:"", iconColor:"#000", bio:"", languages:"", websiteUrl:"", githubUrl:"", linkedinUrl:"", instagramUrl:"", facebookUrl:"" }, followingIds:[], followerIds:[], likeIds:[], commentIds:[], postIds:[] });
+
+    // const userRef = await db.collection('users').get();
+    // let followerList = userRef.docs.map((doc) => (doc.id));
+    // let followers = [];
+    // let following = [];
+    
+    // for (let i = 0; i < followerList.length; i++){
+    //   let followerAddRemove = Math.floor(Math.random() * 2);
+    //   console.log('test',followerAddRemove);
+    //   if (followerAddRemove) followers.push(followerList[i]);
+    // }
+    // for (let i = 0; i < followerList.length; i++){
+    //   let followingAddRemove = Math.floor(Math.random() * 2);
+    //   console.log('test',followingAddRemove);
+    //   if (followingAddRemove) following.push(followerList[i]);
+    // }
+
+
+    await db.collection("users").doc(uid).set({ email, username, "profile": { joined, displayName: name, avatarSrc:additionalData.avatarSrc, bannerSrc:additionalData.bannerSrc, iconColor:additionalData.color, bio:additionalData.bio, languages:additionalData.languages, websiteUrl:additionalData.websiteUrl, githubUrl:additionalData.githubUrl, linkedinUrl:additionalData.linkedinUrl, instagramUrl:additionalData.instagramUrl, facebookUrl:additionalData.facebookUrl }, 
+    followingIds:[], followerIds:[], commentIds:[], postIds:[] });
+    // await db.collection("users").doc(uid).set({ email, username, "profile": { joined, displayName: name, avatarSrc:"", bannerSrc:"", iconColor:"#000", bio:"", languages:"", websiteUrl:"", githubUrl:"", linkedinUrl:"", instagramUrl:"", facebookUrl:"" }, followingIds:[], followerIds:[], commentIds:[], postIds:[] });
     const user = await db.collection("users").doc(uid).get();
     res.status(200).json({ status: 200, user, message: "User created" });
   } catch (error) {
@@ -69,10 +89,27 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const followUser = async (req, res) => {
+  const { uid, followId, followerState } = req.body;
+  try {
+    if (followerState === 'unfollowed') {
+      await db.collection("users").doc(uid).update({followingIds: FieldValue.arrayRemove(followId)});
+      await db.collection("users").doc(followId).update({followerIds: FieldValue.arrayRemove(uid)});
+    } else {
+      await db.collection("users").doc(uid).update({followingIds: FieldValue.arrayUnion(followId)});
+      await db.collection("users").doc(followId).update({followerIds: FieldValue.arrayUnion(uid)});
+    }
+    res.status(200).json({ status: 200, message: `User ${followerState}` })
+  } catch (error) {
+    res.status(500).json({ status: 500, message: "Server error..." });
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
   registerNewUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  followUser
 };

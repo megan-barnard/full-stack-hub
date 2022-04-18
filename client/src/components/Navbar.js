@@ -8,7 +8,7 @@ import { CurrentUserContext } from "../context/CurrentUserContext";
 
 
 const Navbar = () => {
-  const { currentUser, logoutCurrentUser } = useContext(CurrentUserContext);
+  const { currentUser, logoutCurrentUser, generateRandomUser } = useContext(CurrentUserContext);
   const history = useHistory();
 
   const handleLogout = () => {
@@ -28,23 +28,16 @@ const Navbar = () => {
         <NavbarLink exact to="/create" activeClassName="active"><MenuItem><FaPlusSquare /></MenuItem></NavbarLink>
         <NavbarLink exact to="/notifications" activeClassName="active"><MenuItem><FaBell /></MenuItem></NavbarLink> 
         <NavbarLink exact to="/search" activeClassName="active"><MenuItem><FaSearch /></MenuItem></NavbarLink>
-        {/* <Logout onClick={() => handleLogout()}><MenuItem> Logout </MenuItem></Logout>
+
         {!currentUser ? (<NavbarLink to="/signup"><MenuItem> Signup </MenuItem></NavbarLink>) : (
           <>
-            <NavbarLink to={`/profile/${currentUser}`}>
-              <NavNoAvatar></NavNoAvatar>
+            <NavbarLink to={`/profile/${currentUser.id}`}>
+              {(currentUser.profile && currentUser.profile.avatarSrc) ? <NavAvatar src={currentUser.profile.avatarSrc} /> : <NavNoAvatar></NavNoAvatar>}
             </NavbarLink>
             <Logout onClick={() => handleLogout()}><MenuItem> Logout </MenuItem></Logout>
           </>
-        )} */}
-        {!currentUser ? (<NavbarLink to="/signup"><MenuItem> Signup </MenuItem></NavbarLink>) : (
-          <>
-            <NavbarLink to={`/profile/${currentUser}`}>
-              {!currentUser.profile.avatarSrc ? <NavAvatar src={currentUser.profile.avatarSrc} /> : <NavNoAvatar></NavNoAvatar>}
-            </NavbarLink>
-            <Logout onClick={() => handleLogout()}><MenuItem> Logout </MenuItem></Logout>
-          </>
-        )}
+        )} 
+        <Logout style={{color: "#fff"}} onClick={() => generateRandomUser()}>user</Logout>
       </NavDiv>
     </Wrapper>
   )
@@ -69,7 +62,7 @@ const LogoLink = styled(NavLink)`
     color: var(--primary-button-active);
   }
   & svg {
-    color: #fff;
+    color: var(--color-logo-yellow);
     margin-right: 10px;
   }
 `;

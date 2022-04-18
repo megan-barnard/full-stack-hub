@@ -6,17 +6,13 @@ import PostContent from "./PostContent";
 import ActionBar from "./ActionBar";
 import PostComments from "./PostComments";
 
-import { users } from "../../assets/testData";
-
 const Post = ({post}) => {
-  const postAuthor = users[post.authorId];
-
   return (
     <Wrapper>
       <PostDiv>
-        <PostHeader post={post} postAuthor={postAuthor} />
-        <PostContent post={post} />
-        <ActionBar post={post} />
+        <PostHeader user={post.user} timestamp={post.createdAt} category={post.category} />
+        <PostContent status={post.status} image={post.image} />
+        <ActionBar postId={post.id} likedBy={post.likedBy} />
       </PostDiv>
       <PostComments post={post} />
     </Wrapper>
@@ -24,7 +20,7 @@ const Post = ({post}) => {
 };
 
 const Wrapper = styled(Container)`
-  margin-top: 30px;
+  margin: 15px 0;
 `;
 
 const PostDiv = styled.div`

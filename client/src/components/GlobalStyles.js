@@ -2,6 +2,8 @@ import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
   :root {
+    --color-logo-blue: #14213d;
+    --color-logo-yellow: #fca311;
     --color-dark-grey: #0d0d0d;
     --color-grey: #878787;
     --color-light-grey: #d4d4d4;
@@ -11,6 +13,7 @@ export default createGlobalStyle`
     --font-logo: 'Poppins', "Segoe UI", Helvetica, sans-serif;
     --font-heading: "Segoe UI", Helvetica, sans-serif; 
     --font-body: "Segoe UI", Helvetica, sans-serif;
+
     --font-lg: 25px;
     --font-md: 20px;
     --font-sm: 15px;

@@ -6,7 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 
 const Signup = () => {
   const { currentUser, userError, setUserError, registerNewUser } = useContext(CurrentUserContext);
-  const [loginDetails, setLoginDetails] = useState({ name: '', email: '', password: '' });
+  const [loginDetails, setLoginDetails] = useState({ name: '', username: '', email: '', password: '' });
   const history = useHistory();
 
   useEffect(() => {
@@ -23,13 +23,25 @@ const Signup = () => {
   const handleLoginSubmit = (ev) => {
     ev.preventDefault();
     setUserError('');
-    if (loginDetails.name && loginDetails.email && loginDetails.password) {
-      registerNewUser(loginDetails);
+    console.log('test submit');
+    const validUsername = isUserNameValid(loginDetails.username);
+    console.log('validUsername',validUsername);
+    if (loginDetails.name && loginDetails.username && loginDetails.email && loginDetails.password) {
+      if (validUsername) {
+        console.log('submitted');
+        registerNewUser(loginDetails);
+      } else {
+        setUserError('Invalid username');
+      }
     } else {
       setUserError('Missing data');
     }
   };
-
+  const isUserNameValid = (username) => {
+    const res = /^[a-z0-9_\.]+$/.exec(username);
+    const valid = !!res;
+    return valid;
+  }
   return (
     <Wrapper>
       <LoginContainer>
@@ -43,6 +55,15 @@ const Signup = () => {
               type="text"
               id="name" 
               name="name" 
+              required 
+            />
+            <UserInputLabel htmlFor="username">Username: </UserInputLabel>
+            <UserInput 
+              value={loginDetails.username} 
+              onChange={handleLoginChange} 
+              type="text"
+              id="username" 
+              name="username" 
               required 
             />
             <UserInputLabel htmlFor="email">Email: </UserInputLabel>

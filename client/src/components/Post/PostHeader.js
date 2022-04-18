@@ -3,26 +3,22 @@ import { Avatar, DisplayName, UnstyledLink } from "../Styles";
 import moment from "moment";
 import { FaBriefcase, FaLaptopCode, FaUserAlt } from "react-icons/fa";
 
-const PostHeader = ({post, postAuthor}) => {
-  let postDate = moment(post.timestamp).calendar(); 
-
-  // Current time generator
-  // let currentTimestamp = moment().format();
-  // console.log('current',currentTimestamp);
-
+const PostHeader = ({ user, timestamp, category }) => {
+  const date = new Date(timestamp._seconds * 1000 + timestamp._nanoseconds/1000000)
+  let postDate = moment(date).calendar(); 
   return (
     <Wrapper>
       <Info>
-        <UnstyledLink to={`/profile/${postAuthor.id}`}><Avatar src={postAuthor.profile.avatarSrc} alt={postAuthor.profile.displayName} loading="lazy"></Avatar></UnstyledLink>
-        <Name>
-          <UnstyledLink to={`/profile/${postAuthor.id}`}><DisplayName>{postAuthor.profile.displayName}</DisplayName></UnstyledLink>
-          <Handle><UnstyledLink to={`/profile/${postAuthor.id}`}>@{postAuthor.id}</UnstyledLink><span> · {postDate}</span></Handle>
-        </Name>
+        <UnstyledLink to={`/profile/${user.id}`}><Avatar src={user.avatarSrc} alt={user.displayName} loading="lazy"></Avatar></UnstyledLink>
+        <div>
+          <UnstyledLink to={`/profile/${user.id}`}><DisplayName>{user.displayName}</DisplayName></UnstyledLink>
+          <Handle><UnstyledLink to={`/profile/${user.id}`}>@{user.username}</UnstyledLink><span> · {postDate}</span></Handle>
+        </div>
       </Info>
       <CategoryIcon>
-        {post.category === 'career' && <FaBriefcase size={25} />}
-        {post.category === 'project' && <FaLaptopCode size={25} />}
-        {post.category === 'personal' && <FaUserAlt size={25} />}
+        {category === 'career' && <FaBriefcase size={25} />}
+        {category === 'project' && <FaLaptopCode size={25} />}
+        {category === 'personal' && <FaUserAlt size={25} />}
       </CategoryIcon>
     </Wrapper>
   )
@@ -37,10 +33,6 @@ const Wrapper = styled.div`
 const Info = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const Name = styled.div`
-  
 `;
 
 const Handle = styled.span`

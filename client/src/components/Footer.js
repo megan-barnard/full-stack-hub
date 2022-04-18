@@ -11,7 +11,7 @@ const Footer = () => {
         <FooterLink to="/">Terms</FooterLink>
         <FooterLink to="/">Features</FooterLink>
       </FooterLinks>
-      <Copyright>© 2022 Insert name here</Copyright>
+      <Copyright>© 2022 Full Stack Hub</Copyright>
     
     </Wrapper>
   )

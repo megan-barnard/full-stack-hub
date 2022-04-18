@@ -1,31 +1,37 @@
 import styled from "styled-components";
 import { FaThumbsUp, FaRegComment, FaShare } from "react-icons/fa";
+import { useContext, useState, useEffect } from "react";
 
-import { users, posts } from "../../assets/testData"; // Remove
+import { PostContext } from "../../context/PostContext";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
 
-const ActionBar = ({postId}) => {
-  const post = posts[postId];
+const ActionBar = ({ postId, likedBy }) => {
+  const { currentUser } = useContext(CurrentUserContext);
+  const { likePost } = useContext(PostContext);
+  const [ liked, setLiked ] = useState(likedBy.includes(currentUser.id));
 
-  const likePost = () => {
-    console.log('like post');
 
-
+  const handleLike = () => {
+    const newLike = !liked;
+    setLiked(newLike);
+    likePost({postId, uid: currentUser.id, like: newLike});
+    console.log('like post:',postId,newLike);
   };
-  const commentOnPost = () => {
-    console.log('comment on post');
 
+  const handleComment = () => {
+    console.log('comment on post:',postId);
   };
-  const sharePost = () => {
-    console.log('share post');
 
-
+  const handleShare = () => {
+    console.log('share post:',postId);
   };
 
   return (
     <Wrapper>
-      <ActionBarBtn onClick={() => likePost()}><FaThumbsUp /></ActionBarBtn>
-      <ActionBarBtn onClick={() => commentOnPost()}><FaRegComment /></ActionBarBtn>
-      <ActionBarBtn onClick={() => sharePost()}><FaShare /></ActionBarBtn>
+      {/* <Count></Count>  ADD LIKE COUNT*/}
+      <ActionBarBtn onClick={() => handleLike()} className={liked ? 'liked' : ''}><FaThumbsUp size={27} /></ActionBarBtn>
+      <ActionBarBtn onClick={() => handleComment()}><FaRegComment size={27} /></ActionBarBtn>
+      <ActionBarBtn onClick={() => handleShare()}><FaShare size={27} /></ActionBarBtn>
     </Wrapper>
   )
 };
@@ -42,14 +48,14 @@ const ActionBarBtn = styled.button`
   font-family: var(--font-heading);
   font-size: 18px;
   text-align: center;
-
-  & svg {
-    width: 23px;
-    height: 23px;
+  &:hover svg {
+    opacity: 0.55;
   }
+  &:active {
 
-  &:hover {
-    background-color: lightgray;
+  }
+  &.liked {
+    color: var(--color-logo-yellow);
   }
 `;
 

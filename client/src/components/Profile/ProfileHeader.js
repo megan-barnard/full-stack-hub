@@ -1,12 +1,23 @@
 import styled from "styled-components";
-import { Container, Avatar, DisplayName } from "../Styles";
-import { FaExternalLinkAlt, FaGithubSquare, FaLinkedin, FaInstagramSquare, FaFacebookSquare, FaCalendar, FaEllipsisH } from "react-icons/fa";
+import { useContext } from "react";
 import moment from "moment";
 import tippy from "tippy.js";
 import 'tippy.js/dist/tippy.css';
 
-const ProfileHeader = ({user}) => {
-  let joinedDate = moment(user.profile.joined).calendar(); 
+import { FaExternalLinkAlt, FaGithubSquare, FaLinkedin, FaInstagramSquare, FaFacebookSquare, FaCalendar, FaEllipsisH } from "react-icons/fa";
+import { Avatar, DisplayName } from "../Styles";
+import { CurrentUserContext } from "../../context/CurrentUserContext";
+import { PostFeedContext } from "../../context/PostFeedContext";
+
+const ProfileHeader = () => {
+  const { currentUser } = useContext(CurrentUserContext);
+  const { userDetails, userDetailsLoading } = useContext(PostFeedContext);
+  
+  if (!userDetails || !userDetails.profile || !userDetails.profile.joined) {
+    userDetails = {id:"",username:"",profile: {joined:"",displayName:"",avatarSrc:"",bannerSrc:"",iconColor:"#000",bio:"",languages:"",websiteUrl:"",githubUrl:"",linkedinUrl:"",instagramUrl:"",facebookUrl:""},followingIds:[],followerIds:[],likeIds:[],commentIds:[],postIds:[]};
+  }
+
+  let joinedDate = moment(userDetails.profile.joined).calendar(); 
   tippy('#action-edit', {content: "edit profile", arrow: true, theme: 'light', delay: 1000,},);
 
   const editActionClicked = () => {
@@ -15,28 +26,28 @@ const ProfileHeader = ({user}) => {
 
   return (
     <>
-      <Banner style={{background: user.profile.bannerSrc ? `url(${user.profile.bannerSrc}) no-repeat center` : 'grey'}}>
+      <Banner style={{background: (userDetails.profile.bannerSrc && userDetails.profile) ? `url(${userDetails.profile.bannerSrc}) no-repeat center` : 'grey'}}>
         <SocialLinks>
-          {user.profile.websiteUrl && <SocialLink target="_blank" href={user.profile.websiteUrl}><FaExternalLinkAlt size={24} style={{color: user.profile.iconColor ? user.profile.iconColor : '' }}/></SocialLink>}
-          {user.profile.githubUrl && <SocialLink target="_blank" href={user.profile.githubUrl}><FaGithubSquare size={25} style={{color: user.profile.iconColor ? user.profile.iconColor : '' }} /></SocialLink>}
-          {user.profile.linkedinUrl && <SocialLink target="_blank" href={user.profile.linkedinUrl}><FaLinkedin size={25} style={{color: user.profile.iconColor ? user.profile.iconColor : '' }} /></SocialLink>}
-          {user.profile.instagramUrl && <SocialLink target="_blank" href={user.profile.instagramUrl}><FaInstagramSquare size={25} style={{color: user.profile.iconColor ? user.profile.iconColor : '' }} /></SocialLink>}
-          {user.profile.facebookUrl && <SocialLink target="_blank" href={user.profile.facebookUrl}><FaFacebookSquare size={25} style={{color: user.profile.iconColor ? user.profile.iconColor : '' }} /></SocialLink>}
+          {userDetails.profile.websiteUrl && <SocialLink target="_blank" href={userDetails.profile.websiteUrl}><FaExternalLinkAlt size={24} style={{color: userDetails.profile.iconColor ? userDetails.profile.iconColor : '' }}/></SocialLink>}
+          {userDetails.profile.githubUrl && <SocialLink target="_blank" href={userDetails.profile.githubUrl}><FaGithubSquare size={25} style={{color: userDetails.profile.iconColor ? userDetails.profile.iconColor : '' }} /></SocialLink>}
+          {userDetails.profile.linkedinUrl && <SocialLink target="_blank" href={userDetails.profile.linkedinUrl}><FaLinkedin size={25} style={{color: userDetails.profile.iconColor ? userDetails.profile.iconColor : '' }} /></SocialLink>}
+          {userDetails.profile.instagramUrl && <SocialLink target="_blank" href={userDetails.profile.instagramUrl}><FaInstagramSquare size={25} style={{color: userDetails.profile.iconColor ? userDetails.profile.iconColor : '' }} /></SocialLink>}
+          {userDetails.profile.facebookUrl && <SocialLink target="_blank" href={userDetails.profile.facebookUrl}><FaFacebookSquare size={25} style={{color: userDetails.profile.iconColor ? userDetails.profile.iconColor : '' }} /></SocialLink>}
         </SocialLinks>
       </Banner>
-      <EditProfile>
-        <EditBtn id="action-edit" onClick={() => editActionClicked()}><FaEllipsisH size={25}/></EditBtn>
-      </EditProfile>
+
+      {currentUser.id === userDetails.id && <EditProfile><EditBtn id="action-edit" onClick={() => editActionClicked()}><FaEllipsisH size={25}/></EditBtn></EditProfile>}
+
       <Wrapper>
-        <AvatarHeader src={user.profile.avatarSrc} alt={user.profile.displayName} />
-        <DisplayName>{user.profile.displayName}</DisplayName> 
-        <Handle>@{user.id}</Handle> 
+        <AvatarHeader src={userDetails.profile.avatarSrc} alt={userDetails.profile.displayName} />
+        <DisplayName>{userDetails.profile.displayName}</DisplayName> 
+        <Handle>@{userDetails.username}</Handle> 
         <Info>
           <Joined><FaCalendar size={13}/> Joined {joinedDate}</Joined>
-          <Bio>{user.profile.bio}</Bio>
+          <Bio>{userDetails.profile.bio}</Bio>
           <FollowerDiv>
-            <Followers><span>{user.followerIds.length}</span> followers</Followers>
-            <Followers><span>{user.followingIds.length}</span> following</Followers>
+            <Followers><span>{userDetails.followerIds.length}</span> followers</Followers>
+            <Followers><span>{userDetails.followingIds.length}</span> following</Followers>
           </FollowerDiv>
         </Info>
       </Wrapper>  

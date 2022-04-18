@@ -8,7 +8,7 @@ import HomePage from "./HomePage";
 import Notifications from "./Notifications";
 import Profile from "./Profile";
 import PostDetails from "./Post/PostDetails";
-import CreatePost from "./CreatePost/index";
+import CreatePost from "./CreatePost";
 import UserSearch from "./Feed/UserSearch";
 import Login from "./AccountActions/Login";
 import Signup from "./AccountActions/Signup";

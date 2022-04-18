@@ -1,25 +1,20 @@
 import styled from "styled-components";
 
-const PostContent = ({post}) => {
-  
+const PostContent = ({status, image}) => {
   return (
     <Wrapper>
-      <Caption>{post.status}</Caption>
-      {(post.image) && 
-        <Image src={post.image} loading="lazy" /> 
-      }
+      <Caption>{status}</Caption>
+      {image && <Image src={image} loading="lazy" /> }
     </Wrapper>
   )
 };
 
 const Wrapper = styled.div`
 
-
 `;
+
 const Caption = styled.div`
   margin: 15px 0;
-
-
 `;
 
 const Image = styled.img`
@@ -28,7 +23,6 @@ const Image = styled.img`
   object-fit: cover;
   max-height: 500px;
   border-radius: 4px;
-
 `;
 
 export default PostContent;
