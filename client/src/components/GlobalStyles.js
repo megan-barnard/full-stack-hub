@@ -2,8 +2,11 @@ import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
   :root {
-    --color-logo-blue: #14213d;
-    --color-logo-yellow: #fca311;
+    --color-logo: #4ad66d;
+    --color-like: #2dc653;
+    --color-accent-light: #208b3a;
+    --color-accent: #155d27;
+    --color-accent-dark: #10451d;
     --color-dark-grey: #0d0d0d;
     --color-grey: #878787;
     --color-light-grey: #d4d4d4;

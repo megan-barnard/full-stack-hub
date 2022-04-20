@@ -9,14 +9,27 @@ const ProfileFeed = () => { // Send an array of posts
   const [ sortedFeed, setSortedFeed ] = useState([]);
 
   useEffect(() => {
-    setSortedFeed(postFeed.filter(post => post.category === sortPostsCategory));
-    console.log('test',postFeed.filter(post => post.category === sortPostsCategory));
+    handleFeedSort();
+  },[postFeed]);
+
+  useEffect(() => {
+    handleFeedSort();
   }, [sortPostsCategory]);
+
+  const handleFeedSort = () => {
+    if (sortPostsCategory === 'all') {
+      setSortedFeed(postFeed);
+    } else {
+      const newFeed = [ ...postFeed ];
+      const newSortedFeed = newFeed.filter(post => post.category === sortPostsCategory);
+      setSortedFeed(newSortedFeed);
+    }
+  };
 
   return (
     <Wrapper>
-      {(postFeed && postFeed.length) ? (
-        postFeed.map((post) => <Post key={post.id} post={post} />)
+      {(sortedFeed && sortedFeed.length) ? (
+        sortedFeed.map((post) => <Post key={post.id} post={post} />)
         ) : (
         <EmptyPosts>No available Posts</EmptyPosts>
       )}      
@@ -28,6 +41,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 `;
 
 const EmptyPosts = styled(Container)`

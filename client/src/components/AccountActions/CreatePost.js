@@ -1,17 +1,25 @@
 import styled from "styled-components";
-import { Avatar, Container, DarkBtn } from "./Styles";
+import { Avatar, Container, DarkBtn } from "../Styles";
 import { useEffect, useContext } from "react";
 import { FaBriefcase, FaLaptopCode, FaUserAlt, FaUpload } from "react-icons/fa";
 import { Link, useHistory } from "react-router-dom";
 
-import CircularProgress from "./CircularProgress";
-import { CurrentUserContext } from "../context/CurrentUserContext";
-import { PostContext } from "../context/PostContext";
+import CircularProgress from "../CircularProgress";
+import { UserContext } from "../../context/UserContext";
+import { PostContext } from "../../context/PostContext";
 
 const CreatePost = () => {
-  const { currentUser } = useContext(CurrentUserContext);
-  const { currentPost, setCurrentPost, createNewPost, postLoading, setPostLoading, postError, setPostError, postSuccess, setPostSuccess } = useContext(PostContext);
   const history = useHistory();
+  const { currentUser } = useContext(UserContext);
+  const { 
+    currentPost, setCurrentPost, 
+    postLoading, setPostLoading, 
+    postProgress, setPostProgress, 
+    postError, setPostError, 
+    postSuccess, setPostSuccess,
+    uploadPhoto, 
+    createNewPost
+  } = useContext(PostContext);
 
   useEffect(() => {
     if (postSuccess) {
@@ -26,13 +34,24 @@ const CreatePost = () => {
     setCurrentPost(prevState => ({ ...prevState, [name]: value }));
   };
 
+  const imageChange = (ev) => {
+    ev.preventDefault();
+    const image = ev.target.files[0];
+    const newCurrentPost = { ...currentPost, image };
+    setCurrentPost(newCurrentPost);
+  };
+
   const handleSubmit = (ev) => {
     ev.preventDefault();
     setPostError('');
     setPostLoading(true);
+    setPostProgress(0);
     if (currentUser.id && currentPost.status && currentPost.category) {
-      const image = currentPost.image ? currentPost.image : '';
-      createNewPost({authorId: currentUser.id, status: currentPost.status, image, category: currentPost.category })
+      if (currentPost.image) {
+        uploadPhoto({authorId: currentUser.id, ...currentPost});
+      } else {
+        createNewPost({authorId: currentUser.id, ...currentPost})
+      }
     } else {
       setPostError('Missing data');
       setPostLoading(false);
@@ -42,14 +61,16 @@ const CreatePost = () => {
   return (
     !postLoading ? (
       <Wrapper>
-        {(currentUser && currentUser.profile && currentUser.profile.avatarSrc) ? (
+        {(currentUser && currentUser.profile) ? (
           <>
             <Form onSubmit={handleSubmit}>  
               <TextDiv>
                 <Avatar src={currentUser.profile.avatarSrc} />
-                <TextAreaInput value={currentPost.status} onChange={handleChange} maxlength="2000" rows="6" name="status" placeholder="Text" required />
+                <TextAreaInput value={currentPost.status} onChange={handleChange} maxLength="1000" rows="6" name="status" placeholder="Write what's on your mind..." required />
               </TextDiv>
-        
+
+              <LinkInput value={currentPost.link} onChange={handleChange} name="link" placeholder="https://" />
+
               <CategoryDiv>
                 <Title>Type of post:</Title>
                 <CategoryLabel>
@@ -69,22 +90,32 @@ const CreatePost = () => {
               <ConfirmDiv>
                 <div>
                   <FaUpload size={25} />
-                  <ImageInput value={currentPost.image} type="file" accept="image/png, image/gif, image/jpeg, image/jpg" onChange={handleChange} name="image" placeholder="Image" />
+                  <ImageInput 
+                    type="file"  
+                    onChange={imageChange} 
+                    name="image" 
+                    accept="image/png, image/jpeg" 
+                  />
                 </div>
                 <DarkBtn type="submit">Post</DarkBtn>
-              </ConfirmDiv>      
+              </ConfirmDiv>  
+              {postError && <ErrorMessage>ERROR: { postError }</ErrorMessage>}     
             </Form>
-            <div>{postError && <ErrorMessage>ERROR: { postError }</ErrorMessage>}</div> 
           </>
           ) : (<PleaseLogin>Please <LoginLink to='/login'> login </LoginLink> to post</PleaseLogin>)
         }
       </Wrapper>
-    ) : (<CircularProgress />)
+    ) : (
+      <LoadingDiv>
+        {(postProgress && postProgress !== 100) ? (<LoadingProgress><ProgressBar width={`${postProgress}%`}></ProgressBar></LoadingProgress>) : (<CircularProgress />)}
+      </LoadingDiv>
+    )
   )
 };
 
 const Wrapper = styled(Container)`
   margin-top: 30px;
+  width: 100%;
   min-width: 550px;
 `;
 
@@ -110,9 +141,11 @@ const ConfirmDiv = styled.div`
 `;
 
 const ErrorMessage = styled.div`
-  padding: 15px;
-  text-align: center;
+  margin-top: 15px;
+  text-align: right;
   font-family: sans-serif;
+  font-size: 80%;
+  color: red;
 `;
 
 const Title = styled.div`
@@ -123,6 +156,13 @@ const TextAreaInput = styled.textarea`
   width: 100%;
   font-size: 18px;
   resize: none;
+  border: 1px solid var(--color-lighter-grey);
+  outline: none;
+  padding: 5px;
+`;
+
+const LinkInput = styled.input`
+  font-size: 15px;
   border: 1px solid var(--color-lighter-grey);
   outline: none;
 `;
@@ -185,6 +225,25 @@ const PleaseLogin = styled.div`
 const LoginLink = styled(Link)`
   color: var(--color-dark-grey);
   margin: 0 5px;
+`;
+
+const LoadingDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 50px 0;
+`;
+
+const LoadingProgress = styled.div`
+  width: 300px;
+  height: 40px;
+  background-color: var(--color-light-grey);
+  border-radius: 5px;
+`;
+
+const ProgressBar = styled.div`
+  height: 40px;
+  background-color: var(--color-logo);
+  border-radius: 5px;
 `;
 
 export default CreatePost;

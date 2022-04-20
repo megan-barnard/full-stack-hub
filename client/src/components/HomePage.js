@@ -1,6 +1,6 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Container } from "./Styles";
+import { DarkBtn } from "./Styles";
 
 import ErrorMessage from "./ErrorMessage";
 import Post from "./Post/index";
@@ -9,21 +9,42 @@ import { PostFeedContext } from "../context/PostFeedContext";
 
 const HomePage = () => {
   const { postFeed, getHomeFeed, postFeedLoading } = useContext(PostFeedContext);
-  useEffect(() => {
-    console.log('get homefeed');
-    getHomeFeed();
+  const [ initialLoading, setInitialLoading ] = useState(true);
+  const [ lastPostId, setLastPostId ] = useState(null);
+
+  useEffect(() => { 
+    setInitialLoading(true);
+    getHomeFeed({ lastPostId });
   }, []);
 
-  //Get posts as an array
-  const error = false;
-  if (error === true) return 
+  useEffect(() => {
+    if (postFeed && postFeed.length) {
+      setInitialLoading(false);
+      const newLastPost = postFeed[postFeed.length-1].id;
+      setLastPostId(newLastPost);
+    }
+  },[postFeed]);
+
+  const handleGetMorePosts = (ev) => {
+    const newLastPost = postFeed[postFeed.length-1].id;
+    setLastPostId(newLastPost);
+    getHomeFeed({lastPostId: newLastPost});
+  };
 
   return (
     <Wrapper>
-      {postFeedLoading ? (<CircularProgress />) : (
-        (postFeed && postFeed.length) ? (
-          postFeed.map((post) => <Post key={post.id} post={post} />)
-        ) : (<ErrorMessage message={'No available Posts'} />)
+      {initialLoading ? (<CircularProgress />) : (
+        <>
+          {(postFeed && postFeed.length) ? (
+            postFeed.map((post) => <Post key={post.id} post={post} />)
+            ) : (<ErrorMessage message={'No available Posts'} />)
+          }
+          <GetPosts>
+            {(postFeedLoading && !initialLoading) ? (<SmallSpinner><CircularProgress /></SmallSpinner>) : (
+              <GetPostsBtn onClick={handleGetMorePosts}>Load more</GetPostsBtn>
+            )}
+          </GetPosts>
+        </>
       )}
     </Wrapper>
   )
@@ -35,13 +56,26 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const EmptyPosts = styled(Container)`
+const GetPosts = styled.div`
+  width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 150px;
-  margin-top: 25px;
-  text-align: center;
+  margin: 15px 0;
+`;
+
+const GetPostsBtn = styled(DarkBtn)`
+  font-size: 100%;
+`;
+
+const SmallSpinner = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  & div {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+  }
 `;
 
 export default HomePage;

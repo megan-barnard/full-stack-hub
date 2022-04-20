@@ -10,12 +10,14 @@ const {
   newPost,
   deletePost,
   likePost,
-  commentOnPost
+  commentOnPost,
+  deleteCommentOnPost
 } = require('./controllers/postController');
 
 const {
   getUsers,
   getUserById, 
+  getUsersByIds,
   registerNewUser,
   updateUser,
   deleteUser,
@@ -34,15 +36,18 @@ express()
     .post("/api/new-post", newPost) // Create new post { authorId, category, status, image } 
     .post("/api/delete-post", deletePost) // Delete post
     .post("/api/like-post", likePost) // Like/unlike post
-    .post("/api/comment-on-post", commentOnPost) // Comment on post
+    .post("/api/comment-on-post", commentOnPost) // Comment on post 
+    .post("/api/delete-comment", deleteCommentOnPost) // Delete comment on post 
 
     // Users
     .get("/api/get-users", getUsers) // Get users by limit  ...?lastVisibleId=LASTUSERID
     .get("/api/get-user/:uid", getUserById) // Get user by id
+    .post("/api/get-users-by-ids", getUsersByIds) // Get users by ids
     .post("/api/new-user", registerNewUser) // Create new user { username, email, password }
-    .patch("/api/update-user/:uid", updateUser) // Update user { displayName, avatarSrc, bannerSrc, iconColor, bio, languages, websiteUrl, githubUrl, linkedinUrl, instagramUrl, facebookUrl }
+    .post("/api/update-user/:uid", updateUser) // Update user { displayName, avatarSrc, bannerSrc, iconColor, bio, cohort, languages, websiteUrl, githubUrl, linkedinUrl, instagramUrl, facebookUrl }
     .post("/api/delete-user/:uid", deleteUser) // Delete user, not permanent, makes user active = false
     .post("/api/follow-user", followUser) // Follow/unfollow user
+
     // ---------------------------------
     // catch all endpoint
     .get("*", (req, res) => {

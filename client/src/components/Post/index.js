@@ -6,15 +6,15 @@ import PostContent from "./PostContent";
 import ActionBar from "./ActionBar";
 import PostComments from "./PostComments";
 
-const Post = ({post}) => {
+const Post = ({ post, isPostDetails }) => {
   return (
     <Wrapper>
       <PostDiv>
         <PostHeader user={post.user} timestamp={post.createdAt} category={post.category} />
-        <PostContent status={post.status} image={post.image} />
-        <ActionBar postId={post.id} likedBy={post.likedBy} />
+        <PostContent status={post.status} link={post.link} image={post.image} />
+        <ActionBar postId={post.id} likedBy={post.likedBy} comments={post.comments} />
       </PostDiv>
-      <PostComments post={post} />
+      {isPostDetails && <PostComments post={post} />}
     </Wrapper>
   )
 };

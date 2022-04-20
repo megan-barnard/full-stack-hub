@@ -8,16 +8,13 @@ import ProfileHeader from "./ProfileHeader";
 import ProfileActionBar from "./ProfileActionBar";
 import CircularProgress from "../CircularProgress";
 
-import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { PostFeedContext } from "../../context/PostFeedContext";
 
 const Profile = () => {
   const { userId } = useParams();
-  const { currentUser, getUserDetails, followUser } = useContext(CurrentUserContext);
-  const { userDetails, userDetailsLoading, postFeed, postFeedLoading, getProfileFeed } = useContext(PostFeedContext);
+  const { userDetails, userDetailsLoading, postFeedLoading, getProfileFeed } = useContext(PostFeedContext);
 
   useEffect(() => {
-    console.log('profile changed', userDetails);
     if (userId && !userDetailsLoading) {
       getProfileFeed(userId);
     }

@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { Container, LightBtn } from "../Styles";
 import { useContext, useEffect, useState } from "react";
-import { CurrentUserContext } from "../../context/CurrentUserContext";
+import { UserContext } from "../../context/UserContext";
 import { Link, useHistory } from "react-router-dom";
 
 const Signup = () => {
-  const { currentUser, userError, setUserError, registerNewUser } = useContext(CurrentUserContext);
+  const { currentUser, userError, setUserError, registerNewUser } = useContext(UserContext);
   const [loginDetails, setLoginDetails] = useState({ name: '', username: '', email: '', password: '' });
   const history = useHistory();
 

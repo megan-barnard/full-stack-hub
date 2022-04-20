@@ -1,16 +1,15 @@
 import styled from "styled-components";
 import { Container, LightBtn } from "../Styles";
 import { useContext, useEffect, useState } from "react";
-import { CurrentUserContext } from "../../context/CurrentUserContext";
+import { UserContext } from "../../context/UserContext";
 import { Link, useHistory } from "react-router-dom";
 
 const Login = () => {
-  const { currentUser, userError, setUserError, loginCurrentUser } = useContext(CurrentUserContext);
+  const { currentUser, userError, setUserError, loginCurrentUser } = useContext(UserContext);
   const [loginDetails, setLoginDetails] = useState({ email: '', password: '' });
   const history = useHistory();
 
   useEffect(() => {
-    console.log('CU:', currentUser);
     if (currentUser) {
       history.push("/");
     }
@@ -24,15 +23,13 @@ const Login = () => {
   const handleLoginSubmit = (ev) => {
     ev.preventDefault();
     setUserError('');
-    console.log('test submit');
-
     if (loginDetails.email && loginDetails.password) {
-      console.log('submitted');
       loginCurrentUser(loginDetails);
     } else {
       setUserError('Missing data');
     }
   };
+
   return (
     <Wrapper>
       <LoginContainer>

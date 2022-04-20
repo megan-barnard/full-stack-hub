@@ -14,7 +14,7 @@ const getUsers = async (req, res) => {
     const result = query.docs.map((doc) => ({ id: doc.id, ...doc.data(), }));
     result && result.length ?
       res.status(200).json({ status: 200, data: result, message: "Users received" }):
-      res.status(404).json({ status: 404, message: "No users found" });
+      res.status(200).json({ status: 200, data: [], message: "No users found" });
   } catch (error) {
     res.status(500).json({ status: 500, message: "Server error..." });
   }
@@ -34,31 +34,33 @@ const getUserById = async (req, res) => {
   }
 };
 
+// Get users by ids: /api/get-users-by-ids
+const getUsersByIds = async (req, res) => {
+  const { userIds } = req.body;
+  try {
+    let result = [];
+    for (let i = 0; i < userIds.length; i++) {
+      const userId = userIds[i];
+      const query = await db.collection("users").doc(userId).get();
+      const user = { id: query.id, ...query.data()};
+      result[i] = { id: user.id, avatarSrc: user.profile.avatarSrc, username: user.username, displayName: user.profile.displayName };
+    }
+    (result && result.length) ?
+    res.status(200).json({ status: 200, data: result, message: "Users found" }):
+    res.status(404).json({ status: 404, data: [], message: "No users found" });
+  } catch (error) {
+    res.status(500).json({ status: 500, message: "Server error..." });
+  }
+};
+
+// Register a new user
 const registerNewUser = async (req, res) => {
   const { name, username, email, uid, additionalData } = req.body;
   try {
     const joined = timestamp();
-
-    // const userRef = await db.collection('users').get();
-    // let followerList = userRef.docs.map((doc) => (doc.id));
-    // let followers = [];
-    // let following = [];
-    
-    // for (let i = 0; i < followerList.length; i++){
-    //   let followerAddRemove = Math.floor(Math.random() * 2);
-    //   console.log('test',followerAddRemove);
-    //   if (followerAddRemove) followers.push(followerList[i]);
-    // }
-    // for (let i = 0; i < followerList.length; i++){
-    //   let followingAddRemove = Math.floor(Math.random() * 2);
-    //   console.log('test',followingAddRemove);
-    //   if (followingAddRemove) following.push(followerList[i]);
-    // }
-
-
-    await db.collection("users").doc(uid).set({ email, username, "profile": { joined, displayName: name, avatarSrc:additionalData.avatarSrc, bannerSrc:additionalData.bannerSrc, iconColor:additionalData.color, bio:additionalData.bio, languages:additionalData.languages, websiteUrl:additionalData.websiteUrl, githubUrl:additionalData.githubUrl, linkedinUrl:additionalData.linkedinUrl, instagramUrl:additionalData.instagramUrl, facebookUrl:additionalData.facebookUrl }, 
-    followingIds:[], followerIds:[], commentIds:[], postIds:[] });
-    // await db.collection("users").doc(uid).set({ email, username, "profile": { joined, displayName: name, avatarSrc:"", bannerSrc:"", iconColor:"#000", bio:"", languages:"", websiteUrl:"", githubUrl:"", linkedinUrl:"", instagramUrl:"", facebookUrl:"" }, followingIds:[], followerIds:[], commentIds:[], postIds:[] });
+    await db.collection("users").doc(uid).set({ email, username, "profile": { joined, displayName: name, avatarSrc:additionalData.avatarSrc, bannerSrc:additionalData.bannerSrc, iconColor:additionalData.color, bio:additionalData.bio, cohort:additionalData.cohort, languages:additionalData.languages, websiteUrl:additionalData.websiteUrl, githubUrl:additionalData.githubUrl, linkedinUrl:additionalData.linkedinUrl, instagramUrl:additionalData.instagramUrl, facebookUrl:additionalData.facebookUrl }, 
+    followingIds:[], followerIds:[], postIds:[] });
+    // await db.collection("users").doc(uid).set({ email, username, "profile": { joined, displayName: name, avatarSrc:"", bannerSrc:"", iconColor:"#000", bio:"", cohort:"", languages:"", websiteUrl:"", githubUrl:"", linkedinUrl:"", instagramUrl:"", facebookUrl:"" }, followingIds:[], followerIds:[], postIds:[] });
     const user = await db.collection("users").doc(uid).get();
     res.status(200).json({ status: 200, user, message: "User created" });
   } catch (error) {
@@ -68,11 +70,12 @@ const registerNewUser = async (req, res) => {
 
 // Update user: /api/update-user/:uid
 const updateUser = async (req, res) => {
-  const { displayName, avatarSrc, bannerSrc, iconColor, bio, languages, websiteUrl, githubUrl, linkedinUrl, instagramUrl, facebookUrl } = req.body;
+  const { displayName, avatarSrc, bannerSrc, iconColor, bio, cohort, languages, websiteUrl, githubUrl, linkedinUrl, instagramUrl, facebookUrl } = req.body;
   const { uid } = req.params;
   try {
-    await db.collection("users").doc(uid).update({ "profile.displayName": displayName, "profile.avatarSrc":avatarSrc, "profile.bannerSrc":bannerSrc, "profile.iconColor":iconColor, "profile.bio":bio, "profile.languages":languages, "profile.websiteUrl":websiteUrl, "profile.githubUrl":githubUrl, "profile.linkedinUrl":linkedinUrl, "profile.instagramUrl":instagramUrl, "profile.facebookUrl":facebookUrl});
-    res.status(200).json({ status: 200, message: "User updated" })
+    await db.collection("users").doc(uid).update({ "profile.displayName": displayName, "profile.avatarSrc":avatarSrc, "profile.bannerSrc":bannerSrc, "profile.iconColor":iconColor, "profile.bio":bio,"profile.cohort":cohort, "profile.languages":languages, "profile.websiteUrl":websiteUrl, "profile.githubUrl":githubUrl, "profile.linkedinUrl":linkedinUrl, "profile.instagramUrl":instagramUrl, "profile.facebookUrl":facebookUrl});
+    const result = await db.collection("users").doc(uid).get();
+    res.status(200).json({ status: 200, data: result, message: "User updated" })
   } catch (error) {
     res.status(500).json({ status: 500, message: "Server error..." });
   }
@@ -89,17 +92,25 @@ const deleteUser = async (req, res) => {
   }
 };
 
+// Follow/unfollow user: /api/follow-user
 const followUser = async (req, res) => {
   const { uid, followId, followerState } = req.body;
   try {
-    if (followerState === 'unfollowed') {
-      await db.collection("users").doc(uid).update({followingIds: FieldValue.arrayRemove(followId)});
-      await db.collection("users").doc(followId).update({followerIds: FieldValue.arrayRemove(uid)});
+    if (followerState) {
+      await db.collection("users").doc(uid).update({followingIds: arrayUnion(followId)});
+      await db.collection("users").doc(followId).update({followerIds: arrayUnion(uid)});
     } else {
-      await db.collection("users").doc(uid).update({followingIds: FieldValue.arrayUnion(followId)});
-      await db.collection("users").doc(followId).update({followerIds: FieldValue.arrayUnion(uid)});
+      const queryUid = await db.collection("users").doc(uid).get();
+      const userUid = { id: queryUid.id, ...queryUid.data()};
+      const updatedUid = userUid.followingIds.filter((follower) => follower !== followId);
+      await db.collection("users").doc(uid).update({ followingIds: updatedUid});
+      
+      const queryFollowId = await db.collection("users").doc(followId).get();
+      const userFollowId = { id: queryFollowId.id, ...queryFollowId.data()};
+      const updatedFollowId = userFollowId.followerIds.filter((follower) => follower !== uid);
+      await db.collection("users").doc(followId).update({ followerIds: updatedFollowId});
     }
-    res.status(200).json({ status: 200, message: `User ${followerState}` })
+    res.status(200).json({ status: 200, message: `User ${followerState ? 'followed' : 'unfollowed'}` })
   } catch (error) {
     res.status(500).json({ status: 500, message: "Server error..." });
   }
@@ -108,6 +119,7 @@ const followUser = async (req, res) => {
 module.exports = {
   getUsers,
   getUserById,
+  getUsersByIds,
   registerNewUser,
   updateUser,
   deleteUser,

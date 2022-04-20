@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 
-// import Container from "../GlobalStyles";
+// Container
 export const Container = styled.div`
   width: 100%;
   padding: 15px;

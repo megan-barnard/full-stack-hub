@@ -8,12 +8,14 @@ import HomePage from "./HomePage";
 import Notifications from "./Notifications";
 import Profile from "./Profile";
 import PostDetails from "./Post/PostDetails";
-import CreatePost from "./CreatePost";
-import UserSearch from "./Feed/UserSearch";
+import CreatePost from "./AccountActions/CreatePost";
+import UserSearch from "./UserLists/UserSearch";
 import Login from "./AccountActions/Login";
 import Signup from "./AccountActions/Signup";
 import EditPassword from "./AccountActions/EditPassword";
 import ForgotPassword from "./AccountActions/ForgotPassword";
+import EditProfile from "./AccountActions/EditProfile";
+import DirectMessaging from "./DirectMessaging";
 import ErrorMessage from "./ErrorMessage";
 import Footer from "./Footer";
 
@@ -28,10 +30,10 @@ const App = () => {
           <Route exact path="/"><HomePage /></Route>
           <Route exact path="/notifications"><Notifications /></Route>
           <Route exact path="/profile/:userId"><Profile /></Route>
-          <Route exact path="/profile/:userId/edit"><Profile /></Route>
+          <Route exact path="/editprofile"><EditProfile /></Route>
           <Route exact path="/post/:postId"><PostDetails /></Route>
           <Route exact path="/search"><UserSearch /></Route>
-          <Route exact path="/messages"><HomePage /></Route>
+          <Route exact path="/messages"><DirectMessaging /></Route>
           <Route exact path="/create"><CreatePost /></Route>
           <Route exact path="/signup"><Signup /></Route>
           <Route exact path="/login"><Login /></Route>

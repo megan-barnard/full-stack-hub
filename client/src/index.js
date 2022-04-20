@@ -3,18 +3,18 @@ import ReactDOM from "react-dom";
 import App from "./components/App";
 
 // Context
-import { CurrentUserProvider } from "./context/CurrentUserContext";
+import { UserProvider } from "./context/UserContext";
 import { PostFeedProvider } from "./context/PostFeedContext";
 import { PostProvider } from "./context/PostContext";
 
 ReactDOM.render(
-  <CurrentUserProvider>
+  <UserProvider>
     <PostFeedProvider>
       <PostProvider>
         <App />
       </PostProvider>
     </PostFeedProvider>
-  </CurrentUserProvider>
+  </UserProvider>
 
   , document.getElementById("root")
 );

@@ -19,7 +19,7 @@ const addUsersToPosts = async (posts) => {
 // Get homepage posts by limit, start after the last visible post. /api/get-home-posts?lastVisibleId=LASTPOSTID
 const getHomePosts = async (req, res) => {
   const { lastVisibleId } = req.query;
-  const limit = 25;
+  const limit = 10;
   try {
     const lastPostRef = lastVisibleId ? await db.collection('posts').doc(lastVisibleId).get() : '';
     const query = await db.collection("posts").orderBy('createdAt', 'desc').startAfter(lastPostRef).limit(limit).get();
@@ -37,7 +37,7 @@ const getHomePosts = async (req, res) => {
 const getUserPosts = async (req, res) => {
   const { lastVisibleId } = req.query; 
   const { uid } = req.params;
-  const limit = 25;
+  const limit = 100;
   try {
     const query = await db.collection("posts").where("authorId", "==", uid).get();
   
@@ -64,10 +64,10 @@ const getUserPosts = async (req, res) => {
 const getPostById = async (req, res) => {
   const { postId } = req.params;
   try {
-    const query = await db.collection("posts").get(postId);
-    const post = query.docs.map((doc) => ({ id: doc.id, ...doc.data(), }));
+    const query = await db.collection("posts").doc(postId).get();
+    const post = [{ id: query.id, ...query.data()}];
     const result = await addUsersToPosts(post);
-    result ?
+    result[0] ?
       res.status(200).json({ status: 200, data: result[0], message: "Post found" }):
       res.status(200).json({ status: 200, data: [], message: "No post found" });
   } catch (error) {
@@ -77,9 +77,9 @@ const getPostById = async (req, res) => {
 
 // Create a new post: /api/new-post
 const newPost = async (req, res) => {
-  const { authorId, category, status, image } = req.body;
+  const { authorId, category, status, link, image } = req.body;
   try {
-    const newPost = await db.collection("posts").add({ authorId, category, status, image, createdAt: timestamp(), comments: [], likedBy: [] });
+    const newPost = await db.collection("posts").add({ authorId, category, status, link, image, createdAt: timestamp(), comments: [], likedBy: [] });
     await db.collection("users").doc(authorId).update({ postIds: arrayUnion(newPost.id)});
     res.status(200).json({ status: 200, message: "Posted" })
   } catch (error) {
@@ -98,14 +98,13 @@ const deletePost = async (req, res) => {
   }
 };
 
-// Find a post by id: /api/get-post/:postId
+// Like a post: /api/like-post
 const likePost = async (req, res) => {
   const { postId, uid, like } = req.body;
   try {
     if (like) {
       await db.collection("posts").doc(postId).update({ likedBy: arrayUnion(uid)});
     } else {
-      console.log('testinside');
       const query = await db.collection("posts").doc(postId).get();
       const post = { id: query.id, ...query.data()};
       const updatedLikes = post.likedBy.filter((like) => like !== uid);
@@ -117,16 +116,27 @@ const likePost = async (req, res) => {
   }
 };
 
-// Find a post by id: /api/get-post/:postId
+// Comment on a post: /api/comment-on-post
 const commentOnPost = async (req, res) => {
-  const { postId } = req.body;
+  const { postId, uid, commentBody } = req.body;
   try {
-    const query = await db.collection("posts").get(postId);
-    const post = query.docs.map((doc) => ({ id: doc.id, ...doc.data(), }));
-    const result = await addUsersToPosts(post);
-    result ?
-      res.status(200).json({ status: 200, data: result[0], message: "Post found" }):
-      res.status(200).json({ status: 200, data: [], message: "No post found" });
+    await db.collection("posts").doc(postId).update({ comments: arrayUnion({ uid, commentBody })});
+    res.status(200).json({ status: 200, message: 'Comment posted' });
+  } catch (error) {
+    res.status(500).json({ status: 500, message: "Server error..." });
+  }
+};
+
+// Delete comment on a post: /api/delete-comment
+const deleteCommentOnPost = async (req, res) => {
+  const { postId, uid, commentBody } = req.body;
+  try {
+    const query = await db.collection("posts").doc(postId).get();
+    const post = { id: query.id, ...query.data()};
+    const updatedLikes = post.likedBy.filter((like) => like !== uid);
+    await db.collection("posts").doc(postId).update({ likedBy: updatedLikes});
+    
+    res.status(200).json({ status: 200, message: 'Comment deleted' });
   } catch (error) {
     res.status(500).json({ status: 500, message: "Server error..." });
   }
@@ -139,5 +149,6 @@ const commentOnPost = async (req, res) => {
     newPost,
     deletePost,
     likePost,
-    commentOnPost
+    commentOnPost,
+    deleteCommentOnPost
 };

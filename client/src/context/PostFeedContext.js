@@ -7,27 +7,22 @@ export const PostFeedProvider = ({ children }) => {
   const [ userDetailsLoading, setUserDetailsLoading ] = useState(false);
   const [ postFeed, setPostFeed ] = useState([]);
   const [ postFeedLoading, setPostFeedLoading ] = useState(false);
+  const [ singlePost, setSinglePost ] = useState({});
+  const [ singlePostLoading, setSinglePostLoading ] = useState(false);
   const [ postError, setPostError ] = useState('');
-
   const [ sortPostsCategory, setSortPostsCategory ] = useState('all');
 
-  const getHomeFeed = () => {
+  const getHomeFeed = ({ lastPostId }) => {
     setPostFeedLoading(true);
-    fetch('/api/get-home-posts')
+    const homefeedQuery = lastPostId ? `/api/get-home-posts?lastVisibleId=${lastPostId}` : '/api/get-home-posts';
+    fetch(homefeedQuery)
     .then(res => res.json())
     .then(({data}) => {
-      if (data.length) {
-        console.log('test1');
-        setPostFeed(data);
-      } else {
-        console.log('test2');
-        setPostFeed(data);
-      }
-      console.log('getHomePostFeed:', data);
+      const newPostFeed = lastPostId ? [ ...postFeed, ...data ] : [ ...data ];
+      setPostFeed(newPostFeed);
       setPostFeedLoading(false);
     })
     .catch((error) => {
-      console.log('error getHomePostFeed:', error);
       setPostError(error.message);
       setPostFeedLoading(false);
     });
@@ -38,7 +33,6 @@ export const PostFeedProvider = ({ children }) => {
     fetch(`/api/get-user/${userId}`)
     .then(res => res.json())
     .then(({data}) => {
-      console.log('getProfileFeed:', data);
       setUserDetails(data);
       if (data.postIds && data.postIds.length) {
         getUserFeed(userId)
@@ -48,7 +42,6 @@ export const PostFeedProvider = ({ children }) => {
       setUserDetailsLoading(false);
     })
     .catch((error) => {
-      console.log('error getProfileFeed:', error);
       setPostError(error.message);
       setUserDetailsLoading(false);
     });
@@ -58,29 +51,41 @@ export const PostFeedProvider = ({ children }) => {
     fetch(`/api/get-user-posts/${userId}`)
     .then(res => res.json())
     .then(({data}) => {
-      console.log('getUserFeed:', data);
       setPostFeed(data);
       setPostFeedLoading(false);
     })
     .catch((error) => {
-      console.log('error getUserFeed:', error);
       setPostError(error.message);
       setPostFeedLoading(false);
     });
   };
 
+  const getPost = (postId) => { 
+    setSinglePostLoading(true);
+    fetch(`/api/get-post/${postId}`)
+    .then(res => res.json())
+    .then(({data}) => {
+      setSinglePost(data);
+      setSinglePostLoading(false);
+    })
+    .catch((error) => {
+      setPostError(error.message);
+      setSinglePostLoading(false);
+    });
+  };
+
 	return (
 		<PostFeedContext.Provider value={{ 
-      userDetails,
-      userDetailsLoading,
-      postFeed,
-      postFeedLoading, 
+      userDetails, userDetailsLoading,
+      postFeed, postFeedLoading, 
+      singlePost, singlePostLoading, 
       postError, 
       sortPostsCategory,
       setSortPostsCategory,
       setPostError, 
       getHomeFeed,
-      getProfileFeed
+      getProfileFeed,
+      getPost
     }}>
 			{children}
 		</PostFeedContext.Provider>

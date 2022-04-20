@@ -4,15 +4,14 @@ import { NavLink, useHistory } from "react-router-dom";
 import { FaHome, FaPaperPlane, FaPlusSquare, FaBell, FaSearch, FaQrcode } from "react-icons/fa";
 import { Avatar } from "./Styles";
 
-import { CurrentUserContext } from "../context/CurrentUserContext";
+import { UserContext } from "../context/UserContext";
 
 
 const Navbar = () => {
-  const { currentUser, logoutCurrentUser, generateRandomUser } = useContext(CurrentUserContext);
+  const { currentUser, logoutCurrentUser, generateRandomUser } = useContext(UserContext);
   const history = useHistory();
 
   const handleLogout = () => {
-    console.log('logout');
     logoutCurrentUser();
     history.push("/");
   };
@@ -34,10 +33,10 @@ const Navbar = () => {
             <NavbarLink to={`/profile/${currentUser.id}`}>
               {(currentUser.profile && currentUser.profile.avatarSrc) ? <NavAvatar src={currentUser.profile.avatarSrc} /> : <NavNoAvatar></NavNoAvatar>}
             </NavbarLink>
-            <Logout onClick={() => handleLogout()}><MenuItem> Logout </MenuItem></Logout>
+            <Logout onClick={handleLogout}><MenuItem> Logout </MenuItem></Logout>
           </>
         )} 
-        <Logout style={{color: "#fff"}} onClick={() => generateRandomUser()}>user</Logout>
+        <Logout style={{color: "#fff"}} onClick={generateRandomUser}>user</Logout>
       </NavDiv>
     </Wrapper>
   )
@@ -58,11 +57,11 @@ const LogoLink = styled(NavLink)`
   align-items: center;
   text-decoration: none;
 
-  &:hover > * {
+  &:hover > h1 {
     color: var(--primary-button-active);
   }
   & svg {
-    color: var(--color-logo-yellow);
+    color: var(--color-logo);
     margin-right: 10px;
   }
 `;
@@ -70,6 +69,10 @@ const LogoLink = styled(NavLink)`
 const Logo = styled.h1`
   font-family: var(--font-logo);
   color: var( --logo-color);
+
+  @media screen and (max-width: 949px) { 
+    display: none;
+  }
 `;
 
 const NavDiv = styled.div`
@@ -79,7 +82,7 @@ const NavDiv = styled.div`
 const NavbarLink = styled(NavLink)`
   display: flex;
   align-items: center;
-  margin: 0 10px;
+  margin: 0 5px;
   text-decoration: none;
 
   &:hover > * {
