@@ -1,6 +1,9 @@
-# Full Stack Hub - Social Media Site
- Full Stack Hub is a social media site for developers.
+<div align="center">
+  <img src="demo/logo.png" alt="Logo" width="500" height="100%">
+</div>
 
+# Full Stack Hub - Social Media Site
+ 
 ## Table of Contents
 * [Introduction](#introduction)
 * [Dependencies](#dependencies)
@@ -8,15 +11,14 @@
 * [Deployment](#deployment)
 * [Credits](#credits)
 
-<div align="center">
-  <img src="demo/logo.png" alt="Logo" width="300" height="100%">
-</div>
- 
+
 ## Introduction 
-This application was built with React.js, Node.js, Express.js, and Firebase. This project has functioning Firebase login authentication and data/image storage. Users can create an account, create posts with photos/links/captions, like/comment on posts, follow users, edit their profile, and search for users. Posts are sorted into 3 categories: career, project, and personal. 
+ Full Stack Hub is a social media site for developers. This application was built with React.js, Node.js, Express.js, and Firebase. This project has functioning Firebase login authentication and data/image storage. Users can create an account, create posts with photos/links/captions, like/comment on posts, follow users, edit their profile, and search for users. Posts are sorted into 3 categories: career, project, and personal. 
+
 
 ## Dependencies
 To run the app, install required dependencies using `yarn install` in the /client and the /server folders.
+
 
 ## Demo
 <div align="left">
