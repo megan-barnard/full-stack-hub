@@ -4,9 +4,9 @@ import { Avatar, UnstyledLink } from "../Styles";
 const User = ({ user }) => {
   return (
     <Wrapper>
-      <Avatar src={user.avatarSrc} />
+      <Avatar src={user.profile ? user.profile.avatarSrc : user.avatarSrc} />
       <UnstyledLink to={`/profile/${user.id}`}>
-        <DisplayName>{ user.displayName }</DisplayName>
+        <DisplayName>{(user.profile && user.profile.displayName) ? user.profile.displayName : user.displayName}</DisplayName>
         <Username>@{ user.username }</Username>
       </UnstyledLink>
     </Wrapper>
@@ -19,6 +19,15 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 15px;
   border-bottom: 1px solid var(--color-lighter-grey);
+`;
+
+const NoAvatar = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 2px solid var(--color-light-grey);
+  background-color: var(--color-grey);
 `;
 
 const DisplayName = styled.div`

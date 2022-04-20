@@ -157,7 +157,7 @@ export const UserProvider = ({ children }) => {
       setEditError('Image must be a jpeg, jpg, or png.');
       return;
     }
-    const storageRef = ref(storage, `/avatars/${imageFileName}`);
+    const storageRef = ref(storage, `/banners/${imageFileName}`);
     const uploadTask = uploadBytesResumable(storageRef, userData.newBannerSrc);
     uploadTask.on("state_changed", 
       (snapshot) => {}, 
