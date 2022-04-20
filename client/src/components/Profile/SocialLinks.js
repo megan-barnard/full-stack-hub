@@ -6,7 +6,7 @@ const SocialLinks = ({ user }) => {
   const link = { website: user.websiteUrl, github: user.githubUrl, linkedin: user.linkedinUrl, instagram: user.instagramUrl, facebook: user.facebookUrl };
   const linkNames = Object.keys(link);
   for (let i = 0; i < linkNames.length; i++) {
-    if (!link[linkNames[i]].includes("http://")) {
+    if (!link[linkNames[i]].includes("http://") && link[linkNames[i]]) {
       link[linkNames[i]] = `http://${link[linkNames[i]]}`;
     }
   }

@@ -63,7 +63,7 @@ const CreatePost = () => {
       <Wrapper>
         {(currentUser && currentUser.profile) ? (
           <>
-            <Form onSubmit={handleSubmit}>  
+            <Form onSubmit={handleSubmit} autoComplete="off">  
               <TextDiv>
                 <Avatar src={currentUser.profile.avatarSrc} />
                 <TextAreaInput value={currentPost.status} onChange={handleChange} maxLength="1000" rows="6" name="status" placeholder="Write what's on your mind..." required />

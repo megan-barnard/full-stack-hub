@@ -17,7 +17,7 @@ const ActionBar = ({ postId, likedBy, comments }) => {
   const [ showModal, setShowModal ] = useState(false);
 
   const handleLike = () => {
-    if (!currentUser.id) return;
+    if (!currentUser || !currentUser.id) return;
     const newLike = !likedByUser;
     const newLikeCount = likeCount + (newLike ? 1 : -1);
     setLikedByUser(newLike);

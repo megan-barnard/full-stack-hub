@@ -14,7 +14,7 @@ export const PostProvider = ({ children }) => {
   const [ postSuccess, setPostSuccess ] = useState(false); 
   const [ commentStatus, setCommentStatus ] = useState({ success: false, postId: ''}); 
 
-  const uploadPhoto = ({ authorId, category, status, image }) => {
+  const uploadPhoto = ({ authorId, category, status, link, image }) => {
     const imageType = image.type.split("/").pop().toLowerCase();
     const imageFileName = `${faker.datatype.uuid()}.${imageType}`;
     if (imageType !== 'jpeg' && imageType !== 'jpg' && imageType !== 'png') {
@@ -30,7 +30,7 @@ export const PostProvider = ({ children }) => {
         setPostProgress(prog);
       }, 
       (error) => setPostError('Failed to upload photo'),
-      () => getDownloadURL(uploadTask.snapshot.ref).then((url) => createNewPost({ authorId, category, status, image: url }))
+      () => getDownloadURL(uploadTask.snapshot.ref).then((url) => createNewPost({ authorId, category, status, link, image: url }))
     );
   };
 
@@ -39,7 +39,7 @@ export const PostProvider = ({ children }) => {
     fetch("/api/new-post", {
       method: 'POST',
       headers: {'Content-Type': 'application/json','Accept': 'application/json',},
-      // body: JSON.stringify({ authorId, ...post }),
+      // body: JSON.stringify({ authorId, ...post }), // Used to generate random posts
       body: JSON.stringify({ authorId, category, status, link, image }),
     })
     .then(res => res.json())
@@ -96,26 +96,25 @@ export const PostProvider = ({ children }) => {
   );
 };
 
+
+// Used to generate random posts
 // const randomPostData = () => {
 //   const posts = [
-//     {category: 'career', status: faker.hacker.ingverb(), image: faker.image.business() },
-//     {category: 'career', status: faker.finance.currencySymbol(), image: faker.image.city() },
-//     {category: 'career', status: `${faker.name.jobDescriptor()}, ${faker.name.jobDescriptor()}, ${faker.name.jobDescriptor()}`, image: '' },
-//     {category: 'career', status: `I'm now a ${faker.name.jobTitle()}!`, image: '' },
-//     {category: 'career', status: `${faker.name.jobDescriptor()} ${faker.name.jobArea()} ${faker.name.jobType()}`, image: '' },
-//     {category: 'career', status: faker.company.catchPhrase(), image: '' },
-    
-//     {category: 'project', status: faker.hacker.phrase(), image: faker.image.technics() },
-//     {category: 'project', status: faker.hacker.phrase(), image: faker.image.technics() },
-//     {category: 'project', status: faker.hacker.ingverb(), image: faker.image.abstract() },
-//     {category: 'project', status: faker.hacker.phrase(), image: '' },
-//     {category: 'project', status: `Working on a project for ${faker.company.companyName()}`, image: '' },
-    
-//     {category: 'personal', status: `Just bought ${faker.commerce.productAdjective()} ${faker.commerce.productMaterial()} ${faker.commerce.product()}`, image: '' },
-//     {category: 'personal', status: faker.hacker.adjective(), image: faker.image.nightlife() }, 
-//     {category: 'personal', status: faker.hacker.adjective(), image: faker.image.cats() }, 
-//     {category: 'personal', status: faker.company.bs(), image: '' },
-//     {category: 'personal', status: faker.hacker.phrase(), image: '' },
+//     {category: 'career', status: faker.hacker.ingverb(), link:'', image: faker.image.business(600, 400, true) },
+//     {category: 'career', status: `${faker.name.jobDescriptor()} ${faker.name.jobDescriptor()}, ${faker.name.jobDescriptor()}`, link:'www.callme.com', image: '' },
+//     {category: 'career', status: `I'm now a ${faker.name.jobTitle()}!`,link:'', image: '' },
+//     {category: 'career', status: `${faker.name.jobDescriptor()} ${faker.name.jobArea()} ${faker.name.jobType()}`,link:'', image: '' },
+//     {category: 'career', status: faker.company.catchPhrase(),link:'', image: '' },
+//     {category: 'project', status: faker.hacker.phrase(),link:'', image:''},
+//     {category: 'project', status: faker.hacker.phrase(),link:'', image: faker.image.technics(600, 400, true) },
+//     {category: 'project', status: faker.hacker.ingverb(),link:'www.lookhere.com', image:'' },
+//     {category: 'project', status: faker.hacker.phrase(),link:'', image: '' },
+//     {category: 'project', status: `Working on a project for ${faker.company.companyName()}`,link:'', image: '' },
+//     {category: 'personal', status: `Just bought ${faker.commerce.productAdjective()} ${faker.commerce.productMaterial()} ${faker.commerce.product()}`,link:'', image: '' },
+//     {category: 'personal', status: faker.hacker.adjective(),link:'', image: faker.image.nightlife(600, 400, true) }, 
+//     {category: 'personal', status: faker.hacker.adjective(),link:'', image: faker.image.cats(600, 400, true) }, 
+//     {category: 'personal', status: faker.company.bs(),link:'www.mywebsite.com', image: '' },
+//     {category: 'personal', status: faker.hacker.phrase(), link:'',image: '' },
 //   ];
 //   const postNumber = Math.floor(Math.random() * posts.length);
 //   return posts[postNumber];

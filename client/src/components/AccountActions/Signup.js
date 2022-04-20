@@ -10,8 +10,8 @@ const Signup = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (currentUser) {
-      history.push("/");
+    if (currentUser && currentUser.id) {
+      history.push("/create");
     }
   }, [currentUser]);
 
@@ -23,12 +23,9 @@ const Signup = () => {
   const handleLoginSubmit = (ev) => {
     ev.preventDefault();
     setUserError('');
-    console.log('test submit');
     const validUsername = isUserNameValid(loginDetails.username);
-    console.log('validUsername',validUsername);
     if (loginDetails.name && loginDetails.username && loginDetails.email && loginDetails.password) {
       if (validUsername) {
-        console.log('submitted');
         registerNewUser(loginDetails);
       } else {
         setUserError('Invalid username');
@@ -46,7 +43,7 @@ const Signup = () => {
     <Wrapper>
       <LoginContainer>
         <Title>Sign-up</Title>
-        <Form onSubmit={handleLoginSubmit}>  
+        <Form onSubmit={handleLoginSubmit} autoComplete="off">  
           <UserInputDiv>
             <UserInputLabel htmlFor="name">Name: </UserInputLabel>
             <UserInput 
@@ -70,8 +67,9 @@ const Signup = () => {
             <UserInput 
               value={loginDetails.email} 
               onChange={handleLoginChange} 
-              type="email"
+              type="text"
               id="email" 
+              autoComplete="false"
               name="email" 
               required 
             />

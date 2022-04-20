@@ -74,7 +74,8 @@ const EditProfile = () => {
   
   return (
     !userEditLoading ? (
-    <Wrapper>
+      <Wrapper>
+        <Title>Edit Account</Title>
         {(currentUser && currentUser.profile) ? (
           <>
             <Form onSubmit={handleSubmit}>  
@@ -170,7 +171,10 @@ const ErrorMessage = styled.div`
 `;
 
 const Title = styled.div`
+  font-family: var(--font-logo);
+  font-size: 200%;
   font-weight: bold;
+  margin: 15px;
 `;
 
 const InputLabel = styled.label`

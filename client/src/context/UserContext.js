@@ -27,38 +27,6 @@ export const UserProvider = ({ children }) => {
     if (user && !userLoading) setUserAuthId(user.uid);
   });
 
-  const generateRandomUser = () => {
-    const firstName = faker.name.firstName();
-    const lastName = faker.name.lastName();
-    const randomInt = Math.floor(Math.random() * 1000);
-    const numberOfLanguages = Math.floor(Math.random() * 10);
-    const randomLanguages = ['HTML','CSS','C','Java','Python','C++','C#','Visual Basic','JavaScript','PHP','SQL','Assembly language','Groovy','React', 'Vue.js','.NET','Nim','Opa','Rust', 'Ruby','Z++','JSON','TypeScript'];
-    let languages = '';
-    for (let i = 0; i < numberOfLanguages; i++){
-      let randomLanguage = Math.floor(Math.random() * randomLanguages.length);
-      if (!languages.includes(randomLanguages[randomLanguage])) {
-        languages = languages ? languages+', '+randomLanguages[randomLanguage] : randomLanguages[randomLanguage];
-      }
-    }
-    const name = `${firstName} ${lastName}`;
-    const email = `${firstName}.${lastName}${randomInt}@test.com`;
-    const username = firstName + randomInt;
-    const password = 'test123';
-    const color = faker.internet.color();
-    const avatarSrc = faker.image.avatar();
-    const bannerSrc = faker.image.nature();
-    const bio = faker.hacker.phrase();
-    const facebookUrl = 'www.facebook.com';
-    const linkedinUrl = 'www.linkedin.com';
-    const instagramUrl = 'www.instagram.com';
-    const githubUrl = 'www.github.com';
-    const websiteUrl = 'www.google.com';
-    const cohort = 'CD-WD-12A';
-    const additionalData = {languages, color, avatarSrc, bannerSrc, bio, cohort, facebookUrl, linkedinUrl, instagramUrl, githubUrl, websiteUrl};
-
-    registerNewUser({ name, username, email, password, additionalData });
-  }
-
   // Login user
   const loginCurrentUser = async ({email, password}) => {
     setUserLoading(true);
@@ -261,10 +229,42 @@ export const UserProvider = ({ children }) => {
       loadingUserList,
       getUsersByIds,
       getAllUsers,
-
-      generateRandomUser
     }}>
 			{children}
 		</UserContext.Provider>
 	);
 };
+
+
+// Used to generate random users
+// const generateRandomUser = () => {
+//   const firstName = faker.name.firstName();
+//   const lastName = faker.name.lastName();
+//   const randomInt = Math.floor(Math.random() * 1000);
+//   const numberOfLanguages = Math.floor(Math.random() * 10);
+//   const randomLanguages = ['HTML','CSS','C','Java','Python','C++','C#','Visual Basic','JavaScript','PHP','SQL','Assembly language','Groovy','React', 'Vue.js','.NET','Nim','Opa','Rust', 'Ruby','Z++','JSON','TypeScript'];
+//   let languages = '';
+//   for (let i = 0; i < numberOfLanguages; i++){
+//     let randomLanguage = Math.floor(Math.random() * randomLanguages.length);
+//     if (!languages.includes(randomLanguages[randomLanguage])) {
+//       languages = languages ? languages+', '+randomLanguages[randomLanguage] : randomLanguages[randomLanguage];
+//     }
+//   }
+//   const name = `${firstName} ${lastName}`;
+//   const email = `${firstName}.${lastName}${randomInt}@test.com`;
+//   const username = firstName + randomInt;
+//   const password = 'test123';
+//   const color = faker.internet.color();
+//   const avatarSrc = faker.image.avatar();
+//   const bannerSrc = faker.image.nature(900, 200, true);
+//   const bio = faker.hacker.phrase();
+//   const facebookUrl = 'www.facebook.com';
+//   const linkedinUrl = 'www.linkedin.com';
+//   const instagramUrl = 'www.instagram.com';
+//   const githubUrl = 'www.github.com';
+//   const websiteUrl = 'www.google.com';
+//   const cohort = 'CD-WD-12A';
+//   const additionalData = {languages, color, avatarSrc, bannerSrc, bio, cohort, facebookUrl, linkedinUrl, instagramUrl, githubUrl, websiteUrl};
+
+//   registerNewUser({ name, username, email, password, additionalData });
+// }

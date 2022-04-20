@@ -34,7 +34,7 @@ const Login = () => {
     <Wrapper>
       <LoginContainer>
         <Title>Login</Title>
-        <Form onSubmit={handleLoginSubmit}>  
+        <Form onSubmit={handleLoginSubmit} autoComplete="off">  
           <UserInputDiv>
             <UserInputLabel htmlFor="email">Email: </UserInputLabel>
             <UserInput 

@@ -36,7 +36,6 @@ const Navbar = () => {
             <Logout onClick={handleLogout}><MenuItem> Logout </MenuItem></Logout>
           </>
         )} 
-        <Logout style={{color: "#fff"}} onClick={generateRandomUser}>user</Logout>
       </NavDiv>
     </Wrapper>
   )
@@ -46,6 +45,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   position: fixed;
+  z-index: 99998;
   height: var(--navbar-height);
   width: 100%;
   padding: 0 25px;

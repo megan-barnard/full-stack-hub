@@ -55,12 +55,12 @@ const getUsersByIds = async (req, res) => {
 
 // Register a new user
 const registerNewUser = async (req, res) => {
-  const { name, username, email, uid, additionalData } = req.body;
+  const { name, username, email, uid } = req.body;
   try {
     const joined = timestamp();
-    await db.collection("users").doc(uid).set({ email, username, "profile": { joined, displayName: name, avatarSrc:additionalData.avatarSrc, bannerSrc:additionalData.bannerSrc, iconColor:additionalData.color, bio:additionalData.bio, cohort:additionalData.cohort, languages:additionalData.languages, websiteUrl:additionalData.websiteUrl, githubUrl:additionalData.githubUrl, linkedinUrl:additionalData.linkedinUrl, instagramUrl:additionalData.instagramUrl, facebookUrl:additionalData.facebookUrl }, 
-    followingIds:[], followerIds:[], postIds:[] });
-    // await db.collection("users").doc(uid).set({ email, username, "profile": { joined, displayName: name, avatarSrc:"", bannerSrc:"", iconColor:"#000", bio:"", cohort:"", languages:"", websiteUrl:"", githubUrl:"", linkedinUrl:"", instagramUrl:"", facebookUrl:"" }, followingIds:[], followerIds:[], postIds:[] });
+    // Create random users
+    // await db.collection("users").doc(uid).set({ email, username, "profile": { joined, displayName: name, avatarSrc:additionalData.avatarSrc, bannerSrc:additionalData.bannerSrc, iconColor:additionalData.color, bio:additionalData.bio, cohort:additionalData.cohort, languages:additionalData.languages, websiteUrl:additionalData.websiteUrl, githubUrl:additionalData.githubUrl, linkedinUrl:additionalData.linkedinUrl, instagramUrl:additionalData.instagramUrl, facebookUrl:additionalData.facebookUrl }, followingIds:[], followerIds:[], postIds:[] });
+    await db.collection("users").doc(uid).set({ email, username, "profile": { joined, displayName: name, avatarSrc:"https://firebasestorage.googleapis.com/v0/b/full-stack-hub-social-media.appspot.com/o/avatars%2Favatar.jpg?alt=media&token=43865ad9-76f3-444c-b9c2-2ed1ed65e64e", bannerSrc:"https://firebasestorage.googleapis.com/v0/b/full-stack-hub-social-media.appspot.com/o/banners%2Fbanner.jpg?alt=media&token=228cebb1-d43a-4f83-8c5a-589eef4932e7", iconColor:"#000", bio:"", cohort:"", languages:"", websiteUrl:"", githubUrl:"", linkedinUrl:"", instagramUrl:"", facebookUrl:"" }, followingIds:[], followerIds:[], postIds:[] });
     const user = await db.collection("users").doc(uid).get();
     res.status(200).json({ status: 200, user, message: "User created" });
   } catch (error) {
