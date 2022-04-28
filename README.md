@@ -13,7 +13,7 @@
 
 
 ## Introduction 
- Full Stack Hub is a social media site for developers. This application was built with React.js, Node.js, Express.js, and Firebase. This project has functioning Firebase login authentication and data/image storage. Users can create an account, create posts with photos/links/captions, like/comment on posts, follow users, edit their profile, and search for users. Posts are sorted into 3 categories: Career, Project, and Personal. 
+Full Stack Hub is a social media site for developers. This application was built using React.js, Node.js, Express.js, Firebase, and was built without the use of external styling libraries. This project has functioning Firebase login authentication and data/image storage. Users can create an account, create posts with photos/links/captions, like/comment on posts, follow users, edit their profile, and search for users. Posts are sorted into 3 categories: Career, Project, and Personal. 
 
 
 ## Dependencies
